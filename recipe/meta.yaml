@@ -9,22 +9,20 @@ source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/pyyaml_ft-{{ version }}.tar.gz
   sha256: 0c947dce03954c7b5d38869ed4878b2e6ff1d44b08a0d84dc83fdad205ae39ab
   patches:
-    - 0001-Ensure-we-do-not-end-up-wih-CRLF-line-endings-on-tes.patch
+    - patches/0001-Ensure-we-do-not-end-up-wih-CRLF-line-endings-on-tes.patch
 
 build:
-  number: 3
+  number: 0
+  skip: true  # [py<313]
 
 requirements:
   build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-    - cython                                 # [build_platform != target_platform]
-    - {{ compiler('c') }}
     - {{ stdlib('c') }}
+    - {{ compiler('c') }}
   host:
     - python
     - setuptools
-    - cython
+    - cython >=3.1
     - pip
     - yaml
   run:
@@ -32,20 +30,28 @@ requirements:
     - yaml
 
 test:
+  source_files:
+    - tests
   imports:
     - yaml_ft
     - yaml_ft._yaml
   commands:
     - pip check
+    - pytest -v tests
   requires:
     - pip
+    - pytest
 
 about:
-  home: https://github.com/Quansight-Labs/pyyaml-ft/
+  home: https://github.com/Quansight-Labs/pyyaml-ft
   summary: YAML parser and emitter for Python with support for free-threading
   license: MIT
+  license_family: MIT
   license_file: LICENSE
-  dev_url: https://github.com/Quansight-Labs/pyyaml-ft/
+  description: |
+    A full-featured YAML processing framework for Python with support for free-threading
+  dev_url: https://github.com/Quansight-Labs/pyyaml-ft
+  doc_url: https://github.com/Quansight-Labs/pyyaml-ft/blob/main/README.md
 
 extra:
   recipe-maintainers:
